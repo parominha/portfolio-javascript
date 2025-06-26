@@ -25,7 +25,7 @@ function AuthCheck({ children }) {
     }
   }, [])
 
-  if (loading) return <div>Carregando...</div>
+  if (loading) return <div></div>
   if (!isAuthenticated) return <Navigate to="/login" />
 
   return children

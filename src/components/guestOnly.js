@@ -21,7 +21,7 @@ function GuestOnly({ children }) {
     }
   }, [])
 
-  if (loading) return <div>Carregando...</div>
+  if (loading) return <div></div>
   if (isAuthenticated) return <Navigate to="/dashboard" />
 
   return children

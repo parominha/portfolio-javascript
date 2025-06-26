@@ -9,20 +9,23 @@ const Dashboard = () => {
 
     const navigate = useNavigate();
 
-    const [perfil, setPerfil] = useState(null);
+    const [perfil, setPerfil] = useState();
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login')
     }
 
+    const handleProfile = () => {
+        navigate('/profile')
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('token');
 
         user.get('/profile', {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         })
             .then((res) => setPerfil(res.data.user))
@@ -37,7 +40,23 @@ const Dashboard = () => {
             direction="column"
             justifyContent="center"
             alignItems="center"
-            sx={{ minHeight: '100vh' }}
+            sx={{
+                position: 'relative',
+                minHeight: '100vh',
+                overflow: 'hidden',
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: 'url("/images/login-background.png")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    filter: 'blur(10px)',
+                    transform: 'scale(1.1)',
+                    zIndex: -1,
+                }
+            }}
             spacing={1}
         >
             <Grid item size={12}>
@@ -51,11 +70,12 @@ const Dashboard = () => {
                         mx: 'auto'
                     }}>
                     <Box>
-                        Bem-vindo, {perfil.name}
+                        Bem-vindo, {perfil?.name}
                     </Box>
                 </Paper>
             </Grid>
             <Button onClick={handleLogout}>Logout</Button>
+            <Button onClick={handleProfile}>Meu perfil</Button>
         </Grid>
     )
 }

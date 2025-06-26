@@ -9,6 +9,7 @@ import AuthCheck from './components/authCheck.js'
 import GuestOnly from './components/guestOnly.js';
 import { CssBaseline } from '@mui/material';
 import ResetPassword from './pages/ResetPassword.js';
+import Profile from './pages/Profile.js';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path='/register' element={<GuestOnly><Register /></GuestOnly>} />
           <Route path='/reset-password' element={<GuestOnly><ResetPassword /></GuestOnly>} />
           <Route path='/dashboard' element={<AuthCheck><Dashboard /></AuthCheck>} />
+          <Route path='/profile' element={<AuthCheck><Profile /></AuthCheck>} />
         </Routes>
       </Router>
     </ThemeProvider>

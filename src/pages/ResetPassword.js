@@ -5,42 +5,38 @@ import {
     InputAdornment,
     Box,
 } from '@mui/material';
-import { LockRounded, EmailRounded, CodeRounded } from '@mui/icons-material';
+import auth from '../config/auth.js'
 import { useNavigate } from "react-router-dom";
-import auth from '../config/auth.js';
+import { ErrorOutlineRounded, LockRounded, PersonRounded, GridViewRounded, EmailRounded, CodeRounded, Email } from '@mui/icons-material';
 import Error from '../components/error.js';
 
-const Login = () => {
+const ResetPassword = () => {
 
     const navigate = useNavigate();
 
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleLogin = () => {
-        if (!validateEmail(email)) {
-            setError('E-mail inválido');
+    const handleRegister = () => {
+        if (password !== confirmPassword) {
+            setError('Ops! As senhas não são iguais.');
             return;
         }
-        auth.post('login', {
+        auth.post('register', {
+            name: name,
             email: email,
             password: password
         }).then((res) => {
-            if (res.data.token) {
-                localStorage.setItem('token', res.data.token);
-                navigate('/dashboard');
-            } else {
-                setError('Usuário ou senha incorretos!');
+            if (res.data.message) {
+                navigate('/');
             }
         }).catch((err) => {
-            setError('Erro ao conectar ao servidor.');
-            console.log(err);
-        })
-    }
-
-    const validateEmail = (email) => {
-        return /\S+@\S+\.\S+/.test(email);
+            setError('Erro ao registrar. Tente novamente.');
+            console.error(err);
+        });
     }
 
     return (
@@ -75,19 +71,23 @@ const Login = () => {
                     </Box>
                 </Paper>
             </Grid>
+
+            {/* Bloco 2 */}
             <Grid item size={12}>
                 <Paper elevation={0}
                     sx={{
                         p: 4,
                         maxWidth: '450px',
                         width: '100%',
-                        margin: '0 auto',
+                        mx: 'auto',
                     }}>
+                    {/* título */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center', mb: 3 }}>
                         <Typography sx={{ color: '#f1f1f1', fontSize: '18px' }}>
-                            Login
+                            Recuperação de senha
                         </Typography>
                     </Box>
+
                     <TextField
                         label="E-mail"
                         fullWidth
@@ -99,9 +99,6 @@ const Login = () => {
                         autoComplete='off'
                         sx={{
                             mb: 2,
-                            '& .MuiOutlinedInput-root': {
-                                borderRadius: '5px',
-                            },
                         }}
                         InputProps={{
                             startAdornment: (
@@ -111,51 +108,19 @@ const Login = () => {
                             ),
                         }}
                     />
-                    <TextField
-                        label="Senha"
-                        type="password"
-                        fullWidth
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            if (error) setError('');
-                        }}
-                        sx={{
-                            mb: 0.3,
-                            '& .MuiOutlinedInput-root': {
-                                borderRadius: '5px',
-                            },
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleLogin();
-                            }
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <LockRounded />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <Typography sx={{ px: 0.3, fontSize: '12px' }}>Esqueceu a senha? <a href='/reset-password'>Redefinir senha</a></Typography>
                     <Error error={error} setError={setError} />
                     <Button
                         fullWidth
-                        onClick={handleLogin}
-                        disabled={!email || !password}
+                        onClick={handleRegister}
+                        disabled={!email || error}
                         variant="contained"
                     >
-                        Entrar
+                        Enviar e-mail
                     </Button>
-
-                    <Typography sx={{ fontSize: '13px', textAlign: 'center', color: '#f1f1f1', mt: 0.6 }}>Não possui uma conta? <a href='/register' sx={{ color: '#ffafcc' }}>Clique aqui para criar</a></Typography>
-
                 </Paper>
             </Grid>
         </Grid>
     )
 }
 
-export default Login;
+export default ResetPassword;

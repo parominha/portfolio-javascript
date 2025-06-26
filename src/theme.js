@@ -111,6 +111,7 @@ const theme = createTheme({
                     color: '#fe99ab',
                     textDecoration: 'none',
                     transition: 'color 0.2s ease',
+                    cursor: 'pointer',
                     '&:hover': {
                         color: '#fe8da1',
                         textDecoration: 'underline',
